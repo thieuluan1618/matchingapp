@@ -1,4 +1,4 @@
-﻿namespace API.Models;
+﻿namespace API.Entities;
 
 public class Character
 {
@@ -8,4 +8,3 @@ public class Character
 
     public string Description { get; set; }
 }
-
