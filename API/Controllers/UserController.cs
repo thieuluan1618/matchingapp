@@ -27,7 +27,7 @@ public class UserController : ControllerBase
     [Authorize]
     public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
     {
-        var users = _context.AppUsers.ToListAsync();
+        var users = _context.Users.ToListAsync();
 
         return await users;
     }
@@ -35,7 +35,7 @@ public class UserController : ControllerBase
     [HttpGet("{id}")]
     public ActionResult<AppUser> GetUser(int id)
     {
-        var user = _context.AppUsers.Find(id);
+        var user = _context.Users.Find(id);
 
         return Ok(user);
     }
@@ -49,7 +49,7 @@ public class UserController : ControllerBase
         var user = new AppUser(registerDto.Username,
             hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)), hmac.Key);
 
-        _context.AppUsers.Add(user);
+        _context.Users.Add(user);
         await _context.SaveChangesAsync();
 
         return new UserDto
@@ -62,7 +62,7 @@ public class UserController : ControllerBase
     [HttpPost("login")]
     public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
     {
-        var user = await _context.AppUsers.SingleOrDefaultAsync(x => x.UserName == loginDto.Username);
+        var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == loginDto.Username);
 
         if (user == null) return Unauthorized("Invalid Username or Password");
 
@@ -83,6 +83,6 @@ public class UserController : ControllerBase
 
     private async Task<bool> UserExists(string userName)
     {
-        return await _context.AppUsers.AnyAsync(x => x.UserName.ToLower() == userName.ToLower());
+        return await _context.Users.AnyAsync(x => x.UserName.ToLower() == userName.ToLower());
     }
 }
